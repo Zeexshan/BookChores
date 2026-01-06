@@ -1,0 +1,64 @@
+I want to build a Python Streamlit application called "BookChores" that visualizes books. The user uploads a PDF, and for each page, the app displays the text on the left and an AI-generated image representing that page on the right.
+
+You are a Senior Python Developer. Please build the entire application file structure and code in one go. Do not ask for clarifications; use your best judgment for a clean, modern UI.
+
+1. Tech Stack & Dependencies
+Create a requirements.txt file with exactly these libraries:
+
+streamlit (for the UI)
+
+pymupdf (import name is fitz, for reading PDFs)
+
+google-generativeai (for the Gemini API to summarize text)
+
+requests (for handling API calls if needed)
+
+python-dotenv (for environment variables)
+
+2. Logic (Create a utils.py file)
+Create a helper file utils.py containing three specific functions:
+
+extract_text_from_pdf(pdf_file, page_number): Takes the uploaded file object and page index. Returns the string text of that page. Handle errors if the page doesn't exist.
+
+generate_image_prompt(page_text, api_key): Connects to google.generativeai. Configures the model gemini-1.5-flash. Sends the page_text with a system instruction: "You are an artistic director. Read this book page and describe the main visual scene in a vivid, detailed, cinematic image prompt (max 40 words). Do not include character names, just visual descriptions." Returns the generated prompt string.
+
+get_pollinations_url(prompt): Takes the prompt string and returns a URL for Pollinations.ai.
+
+The format must be: https://image.pollinations.ai/prompt/{encoded_prompt}?width=1024&height=1024&nologo=true
+
+Ensure the prompt is URL-encoded so special characters don't break the link.
+
+3. User Interface (Create main.py)
+Create the main Streamlit app that imports from utils.py.
+
+Page Config: Set layout to "wide" and title to "BookChores".
+
+Sidebar:
+
+Input field for GEMINI_API_KEY (type='password').
+
+File Uploader for PDF files.
+
+Session State: You MUST use st.session_state to track the current_page_number so the app remembers which page the user is on when they click buttons. Initialize it to 0.
+
+Main Layout:
+
+If a PDF is uploaded and API Key is present:
+
+Create two columns: col1, col2 = st.columns([1, 1]).
+
+Left Column: Display the extracted text of the current page inside a scrollable container or simple text area.
+
+Right Column: Call generate_image_prompt then get_pollinations_url, and display the resulting image using st.image(). Display the generated prompt text in small caption below the image for transparency.
+
+Navigation: Add "Previous Page" and "Next Page" buttons at the bottom. These buttons should update st.session_state.current_page_number and rerun the app.
+
+Execution Plan:
+
+Create requirements.txt
+
+Create utils.py
+
+Create main.py
+
+Tell me specifically how to run it (e.g., streamlit run main.py
